@@ -10,15 +10,18 @@
     
     function App(){
         const [amount, setAmount] = React.useState(0);
-        const [flipped, setFlipped] = React.useState(false);
+        //inverted여부를 체크하는 state . initial val is false.
+        const [inverted, setInverted] = React.useState(false);
         const onChange=(event)=>{
             setAmount(event.target.value);
         
         };
         const reset = () => setAmount(0);
-        const onFlip = () => {
+
+        //function to convert flipped value 
+        const onInvert = () => {
             reset();
-            setFlipped((current)=> !current);
+            setInverted((current)=> !current);
         // const onFlip = () => setFlipped(!flipped);
         };
 
@@ -28,12 +31,14 @@
             <div>
                 <label htmlFor="minutes">분 </label>
                 <input 
-                    value={flipped ? amount*60 : amount}
+                    //if it inverted, show "minutes" that calculated
+                    value={inverted ? amount*60 : amount}
                     id="minutes"
                     placeholder="Minutes" 
                     type="number"
                     onChange={onChange}
-                    disabled={flipped === true}
+                    //change the input disabled or enabled depending on inverted state
+                    disabled={inverted === true}
 
                 />
             </div>
@@ -41,17 +46,19 @@
             <div>
                 <label htmlFor="hours">시간 </label>
                 <input 
-                    value={flipped ? amount : Math.round(amount/60)}
+                    //if it inverted, show "hours" as input(amount)
+                    value={inverted ? amount : Math.round(amount/60)}
                     id="hours" 
                     placeholder="Hours" 
                     type="number"
-                    disabled={!flipped}
+                    //if inverted is false, the input turn to disabled
+                    disabled={!inverted}
                     onChange={onChange}
                 />
             </div>
 
             <button onClick={reset}>다시입력</button>
-            <button onClick={onFlip}>바꿔@.@</button>
+            <button onClick={onInvert}>{inverted ? "되돌리기" : "바꿔"}</button>
         </div>
         );
     }
