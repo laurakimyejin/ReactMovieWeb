@@ -8,131 +8,33 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
 
-    function KmToMiles(){
-        const [amount, setAmount] = React.useState(0);
-        const [inverted, setInverted] = React.useState(false);
-        const onChange=(event)=>{
-            setAmount(event.target.value);
-        
-        };
+    function Btn({text, changeValue}){
 
-        const reset = () => setAmount(0);
+        console.log(text,"was rendered");
 
-        const onInvert = () => {
-            reset();
-            setInverted((current)=> !current);
-        };
+        return <button 
+        onClick={changeValue}
+        style={{
+            backgroundColor: "tomato",
+            color:"white",
+            padding:"10px, 20px",
+            border:0,
+            borderRadius:10,
 
-        return(
-            <div>
-                <h3>거리 변환</h3>
-                <div>
-                    <label htmlFor="km">킬로미터 </label>
-                    <input 
-                        value={inverted ? amount*1.609344 : amount}
-                        id="km"
-                        placeholder="Km" 
-                        type="number"
-                        onChange={onChange}
-                        //change the input disabled or enabled depending on inverted state
-                        disabled={inverted === true}
-
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="miles">마일 </label>
-                    <input 
-                        value={inverted ? amount : amount/1.609344}
-                        id="miles" 
-                        placeholder="Miles" 
-                        type="number"
-                        //if inverted is false, the input turn to disabled
-                        disabled={!inverted}
-                        onChange={onChange}
-                    />
-                </div>
-
-            <button onClick={reset}>다시입력</button>
-            <button onClick={onInvert}>{inverted ? "되돌리기" : "바꿔"}</button>
-            </div>
-
-        );
-
-    };
-    
-    function MinutesToHours(){
-        const [amount, setAmount] = React.useState(0);
-        //inverted여부를 체크하는 state . initial val is false.
-        const [inverted, setInverted] = React.useState(false);
-        const onChange=(event)=>{
-            setAmount(event.target.value);
-        
-        };
-        const reset = () => setAmount(0);
-
-        //function to convert flipped value 
-        const onInvert = () => {
-            reset();
-            setInverted((current)=> !current);
-        // const onFlip = () => setFlipped(!flipped);
-        };
-
-        return(
-        <div>
-            <h3>시간 변환기</h3>
-            <div>
-                <label htmlFor="minutes">분 </label>
-                <input 
-                    //if it inverted, show "minutes" that calculated
-                    value={inverted ? amount*60 : amount}
-                    id="minutes"
-                    placeholder="Minutes" 
-                    type="number"
-                    onChange={onChange}
-                    //change the input disabled or enabled depending on inverted state
-                    disabled={inverted === true}
-
-                />
-            </div>
-            
-            <div>
-                <label htmlFor="hours">시간 </label>
-                <input 
-                    //if it inverted, show "hours" as input(amount)
-                    value={inverted ? amount : Math.round(amount/60)}
-                    id="hours" 
-                    placeholder="Hours" 
-                    type="number"
-                    //if inverted is false, the input turn to disabled
-                    disabled={!inverted}
-                    onChange={onChange}
-                />
-            </div>
-
-            <button onClick={reset}>다시입력</button>
-            <button onClick={onInvert}>{inverted ? "되돌리기" : "바꿔"}</button>
-        </div>
-        );
+        }}>
+        {text}
+        </button>
     }
 
+   const MemorizedBtn = React.memo(Btn);
     function App(){
-        const [index, setIndex] = React.useState(0);
-        const onSelect = (event) => {
-            setIndex(event.target.value);
-        }
+        const[value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes");
+        
         return(
         <div>
-            <h1>🔅만능 변환기🔅</h1>
-            <select value={index} onChange={onSelect}>
-                <option value="x">원하는 단위를 선택하세요</option>
-                <option value="0">시간 변환</option>
-                <option value="1">거리 변환</option>
-            </select>
-            <hr/>
-            {index === "x" ? "단위를 선택하셔야합니다ㅠ" : null}
-            {index === "0" ? <MinutesToHours/> : null}
-            {index === "1" ? <KmToMiles/> : null}
+            <MemorizedBtn text={value} changeValue={changeValue}></MemorizedBtn>
+            <MemorizedBtn text="Continue"></MemorizedBtn>    
         </div>
         );
     }
